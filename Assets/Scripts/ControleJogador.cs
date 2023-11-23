@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ControleJogador : MonoBehaviour
 {
@@ -12,18 +13,26 @@ public class ControleJogador : MonoBehaviour
 	private int points;
 	public TextMeshProUGUI pointsText;
 
+	private AudioSource defaultMusic;
 	private AudioSource coinSound;
 	private AudioSource jumpSound;
 	private AudioSource specialSound;
+	private AudioSource springSound;
+	private AudioSource windSound;
+	private AudioSource secondaryMusic;
 
 	void Start() {
 		// inicializa a variável rb com o Rigidbody do componente
 		rb = GetComponent<Rigidbody>();
 		points = 0;
 
+		defaultMusic = GetComponents<AudioSource>()[0];
 		coinSound = GetComponents<AudioSource>()[1];
 		jumpSound = GetComponents<AudioSource>()[2];
 		specialSound = GetComponents<AudioSource>()[3];
+		springSound = GetComponents<AudioSource>()[4];
+		windSound = GetComponents<AudioSource>()[5];
+		secondaryMusic = GetComponents<AudioSource>()[6];
 	}
 
 	// Função executada quando se atualiaza os parâmetros
@@ -65,6 +74,24 @@ public class ControleJogador : MonoBehaviour
 			other.gameObject.SetActive(false);
 			gameObject.transform.localScale = new Vector3(2, 2, 2);
 			specialSound.Play();
+		} else if (other.gameObject.CompareTag("Bomb")) {
+			other.gameObject.SetActive(false);
+			// bombSound.Play();
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		} else if (other.gameObject.CompareTag("Boost")) {
+			other.gameObject.SetActive(false);
+			windSound.Play();
+			speed *= 2;
+		} else if (other.gameObject.CompareTag("Spring")) {
+			other.gameObject.SetActive(false);
+			springSound.Play();
+			jumping = true;
+			Vector3 movement = new Vector3 (0, jumpSize, 0);
+			rb.AddForce(movement * speed);
+		} else if (other.gameObject.CompareTag("Note")) {
+			other.gameObject.SetActive(false);
+			defaultMusic.Stop();
+			secondaryMusic.Play();
 		}
 	}
 

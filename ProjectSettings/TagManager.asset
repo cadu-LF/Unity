@@ -6,6 +6,10 @@ TagManager:
   tags:
   - coin
   - cogumelo
+  - Bomb
+  - Boost
+  - Spring
+  - Note
   layers:
   - Default
   - TransparentFX
